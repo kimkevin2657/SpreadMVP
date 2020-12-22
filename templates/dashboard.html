@@ -1,0 +1,355 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h1>Dashboard <small> Welcome {{session.name}}</small></h1>
+  <hr>
+
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="{{ url_for('static', filename='styles/dashboard.js') }}"></script>
+
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+    /* switch */
+.firstchart{
+  margin-left: 10px;
+  float:left
+}
+.secondchart{
+  margin-left: 10px;
+  float:left;
+}
+.graphoption {
+  float:left;
+  width: 100px;
+}
+.searchbutton{
+  margin-left: 10px;
+  width: 50px;
+  height: 20px;
+  float:left;
+}
+
+.namestock{
+  width: 50px;
+  height: 20px;
+  border: thin;
+  float:left;
+}
+
+.btn {
+  border: none;
+  background-color: inherit;
+  padding: 2px 5px;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-block;
+  width: 50px;
+  height: 20px;
+  float:left;
+}
+
+/* Green */
+.success {
+  color: green;
+}
+
+.success:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Blue */
+.info {
+  color: dodgerblue;
+}
+
+.info:hover {
+  background: #2196F3;
+  color: white;
+}
+
+/* Orange */
+.warning {
+  color: orange;
+}
+
+.warning:hover {
+  background: #ff9800;
+  color: white;
+}
+
+/* Red */
+.danger {
+  color: red;
+}
+
+.danger:hover {
+  background: #f44336;
+  color: white;
+}
+
+/* Gray */
+.default {
+  color: black;
+}
+
+.default:hover {
+  background: #e7e7e7;
+}
+
+
+
+
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+   width: 73px;
+    height: 28px;
+
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #1c83dc;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px ##1c83dc;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(43px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+/* switch */
+        
+        .lcs_label {
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 18px;
+    color: #fff;
+    font-weight: bold;
+    position: absolute;
+    width: 33px;
+    top: 5px;
+    overflow: hidden;
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: all .2s ease-in-out .1s;
+    -ms-transition: all .2s ease-in-out .1s;
+    transition: all .2s ease-in-out .1s;
+}
+        
+        .lcs_label.lcs_label_on {
+    left: -70px;
+    z-index: 6;
+}
+        
+        .lcs_label.lcs_label_off {
+    right: 10px;
+    opacity: 1;
+}
+.chart {
+  margin-top: 15px;
+  height: 50%;
+  width: 100%;
+}
+.parentchartdiv{
+  height: 100px;
+}
+    </style>
+    
+</head>
+
+  <table class="table table-striped">
+  </table>
+
+  <div class='parentchartdiv'> 
+    <select class="graphoption" name="vix" id="VIX">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='VIXsearch'>Search</button>
+    <div class="namestock">VIX</div>
+    <div class='chart' name="VIX" id="tradingview_f6874"></div>
+
+    <select class="graphoption" name="sp" id="SP">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='SPsearch'>Search</button>
+    <div class="namestock">S&P</div>
+    <div class='chart' name="SP" id="tradingview_f6875"></div>
+
+    <select class="graphoption" name="nasdaq" id="NASDAQ">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='NASDAQsearch'>Search</button>
+    <div class="namestock">NASDAQ</div>
+    <div class='chart' name="NASDAQ" id="tradingview_f6876"></div>
+
+    <select class="graphoption" name="dow" id="DOW">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='DOWsearch'>Search</button>
+    <div class="namestock">DOW</div>
+    <div class='chart' name="DOW" id="tradingview_f8888"></div>
+
+    <select class="graphoption" name="facebook" id="FACEBOOK">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='FACEBOOKsearch'>Search</button>
+    <div class="namestock">FACEBOOK</div>
+    <div class='chart' name="FACEBOOK" id="tradingview_f6877"></div>
+
+    <select class="graphoption" name="amazon" id="AMAZON">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='AMAZONsearch'>Search</button>
+    <div class="namestock">AMAZON</div>
+    <div class='chart' name="AMAZON" id="tradingview_f6878"></div>
+
+    <select class="graphoption" name="apple" id="APPLE">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='APPLEsearch'>Search</button>
+    <div class="namestock">APPLE</div>
+    <div class='chart' name="APPLE" id="tradingview_f6879"></div>
+
+    <select class="graphoption" name="netflix" id="NETFLIX">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='NETFLIXsearch'>Search</button>
+    <div class="namestock">NETFLIX</div>
+    <div class='chart' name="NETFLIX" id="tradingview_f6880"></div>
+
+    <select class="graphoption" name="google" id="GOOGLE">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <button class="btn info" id='GOOGLEsearch'>Search</button>
+    <div class="namestock">GOOGLE</div>
+    <div class='chart' name="GOOGLE" id="tradingview_f6881"></div>
+  </div>
+
+  <!-- TradingView Widget END -->
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+
+
+  <!--       ADDED         -->
+
+
+  <!--       ADDED         -->
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.6/css/highcharts.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+<!--         stock chart added    -->
+<script src="//code.highcharts.com/stock/highstock.js"></script>
+<script src="//code.highcharts.com/stock/modules/data.js"></script>
+<script src="//code.highcharts.com/stock/modules/exporting.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.6/css/highcharts.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.6/js/highstock.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/stocktools/gui.css">
+<link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/annotations/popup.css">
+
+
+<script src="https://code.highcharts.com/stock/indicators/indicators-all.js"></script>
+
+<script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
+<script src="https://code.highcharts.com/stock/modules/annotations-advanced.js"></script>
+<script src="https://code.highcharts.com/stock/modules/price-indicator.js"></script>
+<script src="https://code.highcharts.com/stock/modules/full-screen.js"></script>
+
+<script src="https://code.highcharts.com/stock/modules/stock-tools.js"></script>
+
+<script type='module' src="{{ url_for('static', filename='styles/dashboardmain.js') }}">
+</script>
+
+<script type='module' src="{{ url_for('static', filename='styles/VIXswitch.js') }}">
+</script>
+<script type='module' src="{{ url_for('static', filename='styles/SPswitch.js') }}">
+</script>
+<script type='module' src="{{ url_for('static', filename='styles/NASDAQswitch.js') }}">
+</script>
+<script type='module' src="{{ url_for('static', filename='styles/DOWswitch.js') }}">
+</script>
+<script type='module' src="{{ url_for('static', filename='styles/AAPLswitch.js') }}">
+</script>
+<script type='module' src="{{ url_for('static', filename='styles/FBswitch.js') }}">
+</script>
+<script type='module' src="{{ url_for('static', filename='styles/AMZNswitch.js') }}">
+</script>
+<script type='module' src="{{ url_for('static', filename='styles/NFLXswitch.js') }}">
+</script>
+<script type='module' src="{{ url_for('static', filename='styles/GOOGLswitch.js') }}">
+</script>
+
+
+<!-- TradingView Widget END -->
+{% endblock %}
+
+
+
